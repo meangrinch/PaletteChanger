@@ -1,2 +1,2 @@
 # PaletteChanger
-Image color-palette converter
+changes an image's color palette
