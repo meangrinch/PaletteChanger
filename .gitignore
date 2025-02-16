@@ -1,49 +1,47 @@
-# Byte-compiled / optimized / DLL files
+# Byte-compiled / optimized files
 __pycache__/
-*.py[cod]
-*$py.class
+*.pyc
+*.pyo
 
 # C extensions
 *.so
 
-# Distribution / packaging (Keep basic ones, remove most)
+# Distribution / packaging
 build/
 dist/
 *.egg-info/
 *.egg
 
-# Environments (Keep the common ones)
+# Environments
 .env
 .venv
 env/
 venv/
 
-# VS Code (Keep basic ones)
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-!.vscode/*.code-snippets
+# TkInter
+*.tcl
+
+# VS Code (Simplified)
+.vscode/
 
 # Jupyter Notebook
 .ipynb_checkpoints
 
-# IPython
+# IPython (Optional, if you use it)
 profile_default/
 ipython_config.py
 
-# pyenv (likely not needed for a GUI app, but harmless to keep)
+# pyenv (Optional)
 .python-version
 
-# mypy (if you start using it)
+# mypy (Optional, if you use it)
 .mypy_cache/
 
-# Project-Specific (VERY IMPORTANT)
-# Add any files/folders your application GENERATES that you don't want in Git.
-# output/   # Example: If you save converted images to an 'output' folder.
-# *.log    # Any log files your app might create.
+# OS-Specific files
+.DS_Store
+Thumbs.db
 
-# OS-Specific files (good to have)
-.DS_Store  # macOS
-Thumbs.db  # Windows
+# Project-Specific (VERY IMPORTANT - CUSTOMIZE THIS!)
+# Add any files/folders your application GENERATES that you don't want in Git.
+# output/    # Example: If you save palettes to an 'output' folder.
+*.log     # Any log files your app might create.
