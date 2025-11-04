@@ -6,7 +6,7 @@ A simple program that changes an images's color palette based on a provided imag
 
 * Select an image file (various formats supported).
 * Input any image as the color palette (auto limits to 256 colors).
-* Limit the maximum number of colors to use from the inputted color palette.
+* Adjust the number of colors to use from the inputted color palette.
 * Colors are replaced based on Euclidean Distance.
 
 ## Notes
