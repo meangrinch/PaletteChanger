@@ -3,6 +3,7 @@
 A simple program that changes an images's color palette based on a provided image.
 
 ![Screenshot](docs/images/example_1.png)
+
 ![Screenshot](docs/images/example_2.png)
 
 ## Features
@@ -16,4 +17,4 @@ A simple program that changes an images's color palette based on a provided imag
 
 ## Notes
 
-Works best with actual color palettes as opposed to random images.
+Works better with actual color palettes as opposed to random images.
