@@ -16,18 +16,12 @@ A browser-based tool for swapping an image's colors to a new palette. Runs clien
 
 <br/>
 
-<div align="center">
-  <table>
-    <tr>
-      <th style="text-align: center">Original</th>
-      <th style="text-align: center">Recolored</th>
-    </tr>
-    <tr>
-      <td><img src="docs/images/example_original.jpg" width="400" /></td>
-      <td><img src="docs/images/example_recolored.png" width="400" /></td>
-    </tr>
-  </table>
-</div>
+<p align="center">
+  <img src="docs/images/example_original.jpg" width="400" alt="Original" />
+  <img src="docs/images/example_recolored.png" width="400" alt="Recolored" />
+  <br/>
+  <sub>Original → Recolored</sub>
+</p>
 
 ---
 
