@@ -93,6 +93,7 @@
       background: var(--bg-main);
       color: var(--text-main);
       height: 100vh;
+      height: 100dvh;
       display: flex;
       flex-direction: column;
       overflow: hidden;
@@ -190,6 +191,8 @@
       display: flex;
       min-height: 0;
       position: relative;
+      /* Clips the off-canvas inspector, which would otherwise widen the mobile layout viewport */
+      overflow: hidden;
     }
     .stage-container {
       order: 1;
@@ -519,6 +522,7 @@
     /* Viewport Work Area */
     .viewport-area {
       flex: 1;
+      touch-action: none;
       position: relative;
       overflow: hidden;
       cursor: grab;
@@ -619,14 +623,19 @@
     /* Side-by-Side Mode */
     .side-by-side-wrap {
       position: absolute;
-      transform-origin: center center;
-      display: flex;
-      gap: 16px;
-      align-items: center;
-      justify-content: center;
+      width: 0;
+      height: 0;
       user-select: none;
       image-rendering: pixelated;
       image-rendering: crisp-edges;
+    }
+
+    /* Positioned and scaled one by one in screen space by placeSideCards() */
+    .side-by-side-wrap > .side-by-side-card {
+      position: absolute;
+      left: 0;
+      top: 0;
+      transform-origin: 0 0;
     }
 
     .side-by-side-card {
@@ -781,6 +790,21 @@
     @media (max-width: 760px) {
       .stage-toolbar { flex-wrap: wrap; height: auto; padding: 6px 12px; }
       #btnSample { display: none; }
+      header { padding: 0 8px; }
+      .logo-title, .header-sep, .hud-credit { display: none; }
+      .header-actions { gap: 2px; }
+      .hud-metrics { overflow-x: auto; scrollbar-width: none; }
+      .status-panel { flex: none; white-space: nowrap; }
+      .inspector { width: min(300px, 85vw); min-width: 0; }
+    }
+    /* iOS zooms the whole page into any focused field smaller than 16px */
+    @media (pointer: coarse) {
+      select, input[type="text"], input[type="number"], textarea, .form-val-input { font-size: 16px; }
+    }
+    /* Fingers need a wider grab area than the 2px line */
+    @media (pointer: coarse) {
+      .split-divider { width: 32px; margin-left: -16px; }
+      .split-divider::before { left: 15px; }
     }
 
     .about-head { display: flex; align-items: center; gap: 10px; }
@@ -917,20 +941,19 @@
           <div class="form-group">
             <label class="form-label-row"><span class="form-label">Source<span class="help-tip" data-tip="Use a built-in palette or sample one from another image.">?</span></span></label>
             <select id="paramPaletteSource">
-              <option value="preset" selected>Preset</option>
-              <option value="custom">From Image</option>
+              <option value="preset" selected>Built-in</option>
+              <option value="custom">Custom</option>
             </select>
           </div>
 
           <div class="form-group" id="presetGroup">
-            <label class="form-label-row"><span class="form-label">Preset<span class="help-tip" data-tip="Curated palettes from classic hardware and pixel artists.">?</span></span></label>
+            <label class="form-label-row"><span class="form-label">Palette<span class="help-tip" data-tip="Curated palettes from classic hardware and pixel artists.">?</span></span></label>
             <select id="paramPreset">
               <option value="" selected>None</option>
               <optgroup label="Nintendo">
                 <option value="GAMEBOY">Game Boy</option>
                 <option value="nintendo-gameboy-bgb">Game Boy BGB</option>
                 <option value="GAMEBOY_POCKET">Game Boy Pocket</option>
-                <option value="kirokaze-gameboy">Kirokaze Game Boy</option>
                 <option value="GAMEBOY_COLOR_SAMPLE">Game Boy Color (Sample)</option>
                 <option value="NES">NES</option>
               </optgroup>
@@ -949,24 +972,60 @@
                 <option value="COMMODORE_VIC20">Commodore VIC-20</option>
               </optgroup>
               <optgroup label="Community">
+                <option value="1bit-monitor-glow">1bit Monitor Glow</option>
+                <option value="2bit-demichrome">2bit Demichrome</option>
+                <option value="31">31</option>
                 <option value="AAP-64">AAP-64</option>
                 <option value="AMMO-8">Ammo-8</option>
                 <option value="APOLLO">Apollo</option>
+                <option value="berry-nebula">Berry Nebula</option>
+                <option value="blessing">Blessing</option>
+                <option value="blk-nx64">BLK NX64</option>
+                <option value="borkfest">Borkfest</option>
+                <option value="cc-29">CC-29</option>
+                <option value="crimson">Crimson</option>
+                <option value="cryptic-ocean">Cryptic Ocean</option>
+                <option value="cyclope6">Cyclope6</option>
                 <option value="DawnBringer-16">DawnBringer 16</option>
                 <option value="DawnBringer-32">DawnBringer 32</option>
-                <option value="DISCORD-2021">Discord 2021</option>
+                <option value="downgraded-32">Downgraded 32</option>
                 <option value="ENDESGA-32">Endesga 32</option>
+                <option value="endesga-64">Endesga 64</option>
+                <option value="ephemera">Ephemera</option>
+                <option value="fantasy-24">Fantasy 24</option>
+                <option value="fiery-plague-gb">Fiery Plague GB</option>
                 <option value="GREYSCALE">Greyscale</option>
+                <option value="ice-cream-gb">Ice Cream GB</option>
+                <option value="ink">Ink</option>
                 <option value="JOURNEY">Journey</option>
+                <option value="justparchment8">JustParchment8</option>
+                <option value="kirokaze-gameboy">Kirokaze Game Boy</option>
                 <option value="LOSPEC-500">Lospec 500</option>
+                <option value="lost-century">Lost Century</option>
+                <option value="maggot24">Maggot 24</option>
+                <option value="midnight-ablaze">Midnight Ablaze</option>
+                <option value="mulfok32">Mulfok32</option>
+                <option value="mushroom">Mushroom</option>
+                <option value="na16">NA16</option>
+                <option value="nyx8">Nyx8</option>
+                <option value="oil-6">Oil 6</option>
+                <option value="pastel-qt">Pastel QT</option>
+                <option value="pear36">Pear36</option>
+                <option value="pollen8">Pollen8</option>
                 <option value="RESURRECT-64">Resurrect 64</option>
+                <option value="rust-gold-8">Rust Gold 8</option>
+                <option value="slso8">SLSO8</option>
+                <option value="sunset-red">Sunset Red</option>
                 <option value="Sweetie-16">Sweetie 16</option>
+                <option value="twilight-5">Twilight 5</option>
+                <option value="velvet-cherry-gb">Velvet Cherry GB</option>
+                <option value="waldgeist">Waldgeist</option>
               </optgroup>
             </select>
           </div>
 
           <div class="form-group" id="customPaletteGroup">
-            <label class="form-label-row"><span class="form-label">Palette Image<span class="help-tip" data-tip="Swatch strips keep their exact colors; other images are reduced to 256.">?</span></span></label>
+            <label class="form-label-row"><span class="form-label">Image<span class="help-tip" data-tip="Swatch strips keep their exact colors; other images are reduced to 256.">?</span></span></label>
             <button class="btn" id="btnUploadPalette">Choose Image…</button>
             <input type="file" id="paletteFileInput" accept="image/*" hidden>
           </div>
@@ -990,19 +1049,19 @@
           </div>
 
           <div class="form-group">
-            <label class="form-label-row"><span class="form-label">Auto-Map<span class="help-tip" data-tip="Rank pairs colors by lightness order; Nearest keeps the closest hues.">?</span></span></label>
+            <label class="form-label-row"><span class="form-label">Auto-Map<span class="help-tip" data-tip="Rank pairs colors by lightness order; Nearest keeps the closest hues. Built-in palettes pick Rank under 16 colors for better contrast.">?</span></span></label>
             <select id="paramAutoMap">
-              <option value="rank">Lightness Rank</option>
-              <option value="nearest" selected>Nearest</option>
+              <option value="rank" selected>Lightness Rank</option>
+              <option value="nearest">Nearest</option>
             </select>
           </div>
 
           <div class="form-group">
             <div class="form-label-row">
-              <span class="form-label">Anchors<span class="help-tip" data-tip="How many source colors get their own mapping (2–64).">?</span></span>
-              <input type="number" class="form-val-input" id="valAnchors" value="16" min="2" max="64" step="1">
+              <span class="form-label">Anchors<span class="help-tip" data-tip="How many source colors get their own mapping (2–256). Built-in palettes set it to their color count.">?</span></span>
+              <input type="number" class="form-val-input" id="valAnchors" value="32" min="2" max="256" step="1">
             </div>
-            <input type="range" id="paramAnchors" min="2" max="64" step="1" value="16">
+            <input type="range" id="paramAnchors" min="2" max="256" step="1" value="32">
           </div>
 
           <div class="form-group" id="quantizerGroup">
@@ -1104,10 +1163,11 @@
         <div class="form-group">
           <label class="form-label">Size<span class="help-tip" data-tip="Nearest-neighbor upscale; 1× keeps the source size.">?</span></label>
           <select id="exportScaleSelect">
-            <option value="1" selected>1× (Original)</option>
+            <option value="1" selected>1× (Native)</option>
             <option value="2">2×</option>
             <option value="4">4×</option>
             <option value="8">8×</option>
+            <option value="16">16×</option>
           </select>
         </div>
         <div class="form-group">
@@ -1152,6 +1212,7 @@
           <tbody>
             <tr><td><kbd>Drag</kbd></td><td>Pan canvas viewport</td></tr>
             <tr><td><kbd>Mouse Wheel</kbd></td><td>Zoom in / out</td></tr>
+            <tr><td><kbd>Pinch</kbd></td><td>Zoom in / out (touch)</td></tr>
             <tr><td><kbd>+</kbd> / <kbd>-</kbd></td><td>Zoom in / out</td></tr>
             <tr><td><kbd>R</kbd></td><td>Fit canvas to screen</td></tr>
             <tr><td><kbd>1</kbd> / <kbd>2</kbd> / <kbd>3</kbd></td><td>Side-by-Side / Split / Result view</td></tr>
@@ -1224,7 +1285,8 @@
     window.PALETTECHANGER_VERSION = "{{VERSION}}";
 
     // Counting colors past the slider's max only matters for showing the Quantizer
-    const MAX_ANCHORS = 64;
+    const MAX_ANCHORS = 256;
+    const DEFAULT_ANCHORS = 32;
     const GRID_MIN_CELL_PX = 8;
 
     const state = {
@@ -1244,6 +1306,7 @@
       isDraggingSplit: false,
       isPeeking: false,
       customPalette: null,
+      customPaletteName: '',
       overrides: {}
     };
 
@@ -1314,7 +1377,7 @@
 
     function paletteName() {
       if (paramPaletteSource.value === 'preset') return paramPreset.options[paramPreset.selectedIndex].text;
-      return state.customPalette ? 'Custom' : 'None';
+      return state.customPalette ? state.customPaletteName || 'Custom' : 'None';
     }
 
     // Manual picks only survive while their color is still in the target palette
@@ -1330,9 +1393,10 @@
         paletteSource: 'preset',
         preset: '',
         customPalette: state.customPalette,
+        customPaletteName: state.customPaletteName,
         output: 'exact',
-        autoMap: 'nearest',
-        anchors: 16,
+        autoMap: 'rank',
+        anchors: DEFAULT_ANCHORS,
         quantizer: 'wu',
         overrides: {}
       };
@@ -1343,6 +1407,7 @@
         paletteSource: paramPaletteSource.value,
         preset: paramPreset.value,
         customPalette: state.customPalette,
+        customPaletteName: state.customPaletteName,
         output: getOutputMode(),
         autoMap: paramAutoMap.value,
         anchors: parseInt(paramAnchors.value, 10),
@@ -1355,6 +1420,7 @@
       if (s.paletteSource !== undefined) paramPaletteSource.value = s.paletteSource;
       if (s.preset !== undefined) paramPreset.value = s.preset;
       if (s.customPalette !== undefined) state.customPalette = s.customPalette;
+      if (s.customPaletteName !== undefined) state.customPaletteName = s.customPaletteName;
       if (s.output !== undefined) setOutputMode(s.output);
       if (s.autoMap !== undefined) paramAutoMap.value = s.autoMap;
       if (s.anchors !== undefined) paramAnchors.value = s.anchors;
@@ -1613,12 +1679,33 @@
 
     // --- Interactive Viewport & Pan / Zoom ---
 
+    // Low enough that two very large images (e.g. 11k px wide) still fit side by side
+    const MIN_ZOOM = 0.01;
+
+    // On-screen gap between side-by-side cards
+    const SIDE_GAP = 16;
+
+    // Each card gets its own screen-space transform, centered on the pan point. Scaling one wrapper around
+    // both cards made it as wide as both images, and Chrome stops painting a scaled layer's content ~16k
+    // pre-zoom pixels in (two 11k-px photos lost half the right one); it also keeps the gap free of the
+    // fractional layout offsets the browser would snap and the zoom would magnify
+    function placeSideCards() {
+      const z = state.zoom;
+      const cards = [...sideBySideWrap.children].filter((c) => c.style.display !== 'none');
+      const total = cards.reduce((sum, c) => sum + c.offsetWidth * z, 0) + SIDE_GAP * (cards.length - 1);
+      let x = state.panX - total / 2;
+      for (const c of cards) {
+        c.style.transform = `translate(${x}px, ${state.panY - c.offsetHeight * z / 2}px) scale(${z})`;
+        x += c.offsetWidth * z + SIDE_GAP;
+      }
+    }
+
     function updateTransform() {
       const scale = state.zoom;
       zoomLevelText.textContent = `${Math.round(scale * 100)}%`;
 
       if (state.viewMode === 'side') {
-        sideBySideWrap.style.transform = `translate(${state.panX}px, ${state.panY}px) scale(${scale})`;
+        placeSideCards();
       } else {
         canvasPanWrap.style.transform = `translate(${state.panX}px, ${state.panY}px) scale(${scale})`;
       }
@@ -1652,7 +1739,10 @@
         label.style.display = visible ? 'block' : 'none';
         if (!visible) return;
         // Sits on top of the canvas, sticking to the viewport top once zoomed past it
-        const top = Math.max(vpRect.top, r.top - label.offsetHeight);
+        // Bottom edge on a whole device pixel about one CSS pixel past the card's top: the card's first rows
+        // paint antialiased, and an exact edge left a seam of 1-2 device pixels, worst on scaled displays
+        const dpr = window.devicePixelRatio || 1;
+        const top = Math.max(vpRect.top, (Math.ceil(r.top * dpr) + Math.ceil(dpr)) / dpr - label.offsetHeight);
         label.style.left = `${left - vpRect.left}px`;
         label.style.width = `${right - left}px`;
         label.style.top = `${top - vpRect.top}px`;
@@ -1665,17 +1755,23 @@
     }
 
     function zoomOut() {
-      state.zoom = Math.max(0.05, state.zoom * 0.8);
+      state.zoom = Math.max(MIN_ZOOM, state.zoom * 0.8);
       updateTransform();
     }
 
     function zoomAt(zoomFactor, clientX, clientY) {
-      const newZoom = Math.max(0.05, Math.min(32.0, state.zoom * zoomFactor));
+      const newZoom = Math.max(MIN_ZOOM, Math.min(32.0, state.zoom * zoomFactor));
       if (newZoom === state.zoom) return;
 
       const rect = viewportArea.getBoundingClientRect();
-      const mouseX = clientX - rect.left - rect.width / 2;
+      let mouseX = clientX - rect.left - rect.width / 2;
       const mouseY = clientY - rect.top - rect.height / 2;
+
+      // The side-by-side gap is fixed on screen, so each card sits half of it off the scaled layout
+      if (state.viewMode === 'side') {
+        const gapMid = sideBySideWrap.firstElementChild.getBoundingClientRect().right + SIDE_GAP / 2;
+        mouseX -= Math.sign(clientX - gapMid) * SIDE_GAP / 2;
+      }
 
       const effectiveFactor = newZoom / state.zoom;
       state.panX -= (mouseX - state.panX) * (effectiveFactor - 1);
@@ -1697,13 +1793,13 @@
       const w = mainCanvas.width;
       const h = mainCanvas.height;
       const isSide = forceSide || state.viewMode === 'side';
-      // Side-by-side: 2 flat cards with 16px gap; title labels sit above them in screen space
+      // Side-by-side: 2 flat cards with a fixed on-screen gap; title labels sit above them in screen space
       const fitScale = isSide
-        ? Math.min(vpW / (w * 2 + 16), Math.max(1, vpH - 26) / h)
+        ? Math.min((vpW - SIDE_GAP) / (w * 2), Math.max(1, vpH - 26) / h)
         : Math.min(vpW / w, vpH / h);
 
       // Floor to integer percentage so zoom never exceeds viewport bounds
-      const scale = Math.max(0.05, Math.min(32.0, Math.floor(fitScale * 100) / 100));
+      const scale = Math.max(MIN_ZOOM, Math.min(32.0, Math.floor(fitScale * 100) / 100));
 
       state.zoom = scale;
       if (isInitial) state.initialZoom = scale;
@@ -1781,14 +1877,51 @@
       zoomAt(e.deltaY < 0 ? 1.2 : 0.833, e.clientX, e.clientY);
     }, { passive: false });
 
-    viewportArea.addEventListener('mousedown', (e) => {
+    // Touch points on the viewport; two at once pinch-zoom (and pan) about their midpoint
+    const pinch = new Map();
+    let pinchDist = 0;
+    let pinchX = 0;
+    let pinchY = 0;
+
+    function pinchMove() {
+      const [a, b] = pinch.values();
+      const dist = Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY);
+      const x = (a.clientX + b.clientX) / 2;
+      const y = (a.clientY + b.clientY) / 2;
+      if (pinchDist && dist) {
+        state.panX += x - pinchX;
+        state.panY += y - pinchY;
+        const zoom = state.zoom;
+        zoomAt(dist / pinchDist, x, y);
+        // zoomAt redraws only when the zoom changed; at a zoom limit the midpoint pan still needs one
+        if (state.zoom === zoom) updateTransform();
+      }
+      pinchDist = dist;
+      pinchX = x;
+      pinchY = y;
+    }
+
+    viewportArea.addEventListener('pointerdown', (e) => {
+      if (e.pointerType === 'touch') {
+        pinch.set(e.pointerId, e);
+        if (pinch.size >= 2) {
+          state.isPanning = false;
+          pinchDist = 0;
+          pinchMove();
+          return;
+        }
+      }
       if (e.target === splitDivider) return;
       state.isPanning = true;
       state.panLastX = e.clientX;
       state.panLastY = e.clientY;
     });
 
-    window.addEventListener('mousemove', (e) => {
+    window.addEventListener('pointermove', (e) => {
+      if (pinch.has(e.pointerId)) {
+        pinch.set(e.pointerId, e);
+        if (pinch.size >= 2) return pinchMove();
+      }
       if (state.isPanning) {
         // Apply movement deltas so zooming (which also moves pan) mid-drag doesn't snap back
         state.panX += e.clientX - state.panLastX;
@@ -1803,16 +1936,19 @@
       }
     });
 
-    window.addEventListener('mouseup', () => {
+    function endDrag(e) {
+      pinch.delete(e.pointerId);
       state.isPanning = false;
       state.isDraggingSplit = false;
-    });
+    }
+    window.addEventListener('pointerup', endDrag);
+    window.addEventListener('pointercancel', endDrag);
 
     window.addEventListener('resize', () => {
       if (state.sourceImage) zoomFit();
     });
 
-    splitDivider.addEventListener('mousedown', (e) => {
+    splitDivider.addEventListener('pointerdown', (e) => {
       e.stopPropagation();
       state.isDraggingSplit = true;
     });
@@ -1911,6 +2047,22 @@
     // preventDefault below so a focused select doesn't also typeahead or open
     const isTyping = (t) => t && t.matches && t.matches('input:not([type=range]):not([type=checkbox]), textarea');
 
+    // Themed (base-select) dropdowns open their list on Up/Down; step the value instead, like a native select
+    if (CSS.supports('appearance', 'base-select')) {
+      document.addEventListener('keydown', (e) => {
+        const sel = e.target;
+        if (!(sel instanceof HTMLSelectElement) || e.altKey || sel.matches(':open')) return;
+        const step = { ArrowDown: 1, ArrowUp: -1 }[e.key];
+        if (!step) return;
+        e.preventDefault();
+        const i = sel.selectedIndex + step;
+        if (i < 0 || i >= sel.options.length) return;
+        sel.selectedIndex = i;
+        sel.dispatchEvent(new Event('input', { bubbles: true }));
+        sel.dispatchEvent(new Event('change', { bubbles: true }));
+      });
+    }
+
     window.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
         document.querySelectorAll('.modal-backdrop').forEach((m) => { m.style.display = 'none'; });
@@ -1973,6 +2125,14 @@
 
     [paramPaletteSource, paramPreset].forEach((input) => {
       input.addEventListener('change', () => {
+        // Exact output can't use more palette colors than there are anchors, so built-in palettes get one per
+        // color. Rank spreads small palettes across the image's tones; with 16+ colors it pulls in off-hue
+        // colors, so larger ones match by nearest instead. Custom palettes keep the user's settings.
+        const builtIn = paramPaletteSource.value === 'preset' && activePalette();
+        if (builtIn) {
+          paramAnchors.value = builtIn.length;
+          paramAutoMap.value = builtIn.length >= 16 ? 'nearest' : 'rank';
+        }
         pruneOverridesToPalette();
         updateLabels();
         triggerRender();
@@ -1996,7 +2156,7 @@
 
     valAnchors.addEventListener('change', () => {
       const n = parseInt(valAnchors.value, 10);
-      if (!Number.isNaN(n)) paramAnchors.value = Math.min(64, Math.max(2, n));
+      if (!Number.isNaN(n)) paramAnchors.value = Math.min(MAX_ANCHORS, Math.max(2, n));
       updateLabels();
       triggerRender();
       recordHistory(true);
@@ -2100,6 +2260,7 @@
           pCtx.imageSmoothingEnabled = false;
           pCtx.drawImage(pImg, 0, 0, tw, th);
           state.customPalette = PaletteEngine.extractPalette(pCtx.getImageData(0, 0, tw, th), 256, 'wu');
+          state.customPaletteName = file.name.replace(/\.[^.]+$/, '');
           paramPaletteSource.value = 'custom';
           pruneOverridesToPalette();
           updateLabels();
@@ -2125,7 +2286,7 @@
       $('exportQualityGroup').style.display = format === 'image/png' ? 'none' : 'flex';
       valExportQuality.value = exportQuality.value;
       const slug = paletteName().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-      exportFilenameInput.value = `${state.sourceName}_${slug}.${EXPORT_EXT[format]}`;
+      exportFilenameInput.value = `${state.sourceName}_${slug || 'custom'}.${EXPORT_EXT[format]}`;
     }
 
     $('btnExportModal').onclick = () => {

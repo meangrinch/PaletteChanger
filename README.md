@@ -47,13 +47,14 @@ python scripts/build.py
 
 ## Features
 
-- **Palettes**: Pick from 26 built-in palettes (Game Boy, NES, PICO-8...) or sample one from an image
-- **Auto Mapping**: Match the image's colors to the palette by nearest color, or by light-to-dark rank so shading survives any hue change
+- **Palettes**: Pick from 61 built-in palettes (Game Boy, NES, PICO-8...) or sample one from an image
+- **Auto Mapping**: Match the image's colors to the palette by nearest color, or by light-to-dark rank so shading survives any hue change; built-in palettes get one anchor per color and pick the method that suits their size
+- **Anchors**: Choose how many of the image's colors (2-256) get their own mapping
 - **Manual Mapping**: Click any color in the mapping table to choose its replacement by hand
 - **Exact Output**: Swap palettes for pixel art so every pixel matches a palette color
-- **Smooth Output**: Recolor photos and painted art while keeping every gradient, with no color limit
-- **Preview**: Compare edits with a split slider, side-by-side view, hold-to-peek, pixel grid overlay, and up to 3200% zoom
-- **Export**: Save as PNG, JPEG, or WebP (native or 2x-8x upscaled), or copy to the clipboard
+- **Smooth Output**: Shift photos and painted art toward a palette while keeping their shading; output isn't limited to the palette's colors
+- **Preview**: Compare edits with a split slider, side-by-side view, hold-to-peek, pixel grid overlay, and up to 3200% zoom, with touch panning and pinch-zoom on phones and tablets
+- **Export**: Save as PNG, JPEG, or WebP (native or 2x-16x upscaled), or copy to the clipboard
 
 ---
 
