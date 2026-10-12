@@ -5147,20 +5147,21 @@
     };
 
     // Clipboard only takes PNG
-    $('btnCopyClipboard').onclick = () => {
-      getExportCanvas('image/png').toBlob(async (blob) => {
-        if (!blob) {
-          setStatusMessage('Image too large to copy at this size.', 3000);
-          return;
-        }
-        try {
-          await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
-          setStatusMessage('Image copied to clipboard.');
-          closeModal('exportModal');
-        } catch (err) {
-          setStatusMessage(`Clipboard copy failed: ${err}`);
-        }
-      }, 'image/png');
+    $('btnCopyClipboard').onclick = async () => {
+      let tooLarge = false;
+      // Safari only allows the write during the click itself, so it gets the blob as a promise
+      const blob = new Promise((resolve, reject) => getExportCanvas('image/png').toBlob((b) => {
+        tooLarge = !b;
+        if (b) resolve(b); else reject(new Error('empty blob'));
+      }, 'image/png'));
+      try {
+        await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+        setStatusMessage('Image copied to clipboard.');
+        closeModal('exportModal');
+      } catch (err) {
+        if (tooLarge) setStatusMessage('Image too large to copy at this size.', 3000);
+        else setStatusMessage(`Clipboard copy failed: ${err}`);
+      }
     };
 
     // --- Modal Management & Dialog Controllers ---
